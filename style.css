@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css?family=Righteous');
+
+@media print {
+    display: none;
+ }
+
+.jumbotron {
+    background-color: #880E4F !important;
+}
+
+.container {
+    padding-top: 48px !important;
+    padding-left: 200px !important;
+    padding-right: 200px !important;
+    padding-bottom: 200px !important;
+}
+
+#page-header-title {
+    font-family: 'Righteous';
+    font-weight: bold;
+    font-size: 128px;
+    margin-left: 112px;
+    padding-top: 164px;
+    padding-bottom: 80px;
+    color: #F5F5F5;
+}
+
+#content-header {
+    font-size: 80px;
+    font-weight: bold;
+    margin-bottom: 64px;
+}
