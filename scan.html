@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Barcode Scanner</title>
+        <meta charset="utf-8"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" />
+        <link href="./style.css" rel="stylesheet" />
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+        <script>
+            var config = {
+                apiKey: "AIzaSyBcNqrPKB9T9-2VKRFsLUtsytj4O09xqWA",
+                authDomain: "musicx-46c2d.firebaseapp.com",
+                databaseURL: "https://musicx-46c2d.firebaseio.com",
+                projectId: "musicx-46c2d",
+                storageBucket: "musicx-46c2d.appspot.com",
+                messagingSenderId: "629755735207"
+            };
+            firebase.initializeApp(config);
+        </script>
+
+        <script>
+            var database;
+
+            $(document).ready(()=>{
+                console.log('JQUERY INIT');
+                $("#barcode-value").focus();
+                database = firebase.database();
+
+                $("input").on("paste",function(e){
+                    $("#barcode-value").focus();
+                });
+            });
+
+            function updateDb() {
+                var dataFromBarcode = document.getElementById("barcode-value").value;
+                var dataArr = dataFromBarcode.split(";");
+                var aadahrNumber = dataArr[2];
+
+                database.ref("blood-bank/"+aadahrNumber).once("value", snapshot=>{
+                    const user = snapshot.val();
+                    const userBloodGroup = user.bloodGroup;
+                    var countRef = database.ref("blood-count/"+userBloodGroup);
+
+                    countRef.once("value", snapshot=>{
+                        var currentBloodGroupCount = snapshot.val();
+                        countRef.set(currentBloodGroupCount+1).then(()=>{
+                            alert("Database has been updated");
+                        }).catch(err=>{ 
+                            console.log(err.message);
+                        });
+                    });             
+                });
+
+                console.log(aadahrNumber);
+                
+            }
+        </script>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <h1 id="page-header-title">Donate Blood<br />Save Lives.</h1>
+        </div>
+        <div class="container">
+            <h1 id="content-header">Scan Barcode</h1>
+            <div class="form-group">
+                <input type="text" class="form-control" id="barcode-value" placeholder="SCANNED BARCODE">
+            </div>
+            <button type="submit" class="btn btn-primary" onclick="updateDb()">Update Database</button>
+        </div>
+    </body>
+</html>

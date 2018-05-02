@@ -33,9 +33,11 @@
                 var gender = (document.getElementById("male-radio").checked)? "Male" : "Female";
                 var bloodGroup = document.getElementById("blood-group").value;
                 var currentDate = new Date();
-                var data = bloodGroup+";"+currentDate.getDate()+"/"+currentDate.getMonth()+"/"+currentDate.getFullYear();
+                var expiryDate = new Date();
+                expiryDate.setDate(currentDate.getDate() + 35);
+                var data = bloodGroup+";"+currentDate.getDate()+"/"+currentDate.getMonth()+"/"+currentDate.getFullYear()+";"+aadhar;
                 
-                console.log(name, contactNumber, age, aadhar, gender, bloodGroup, currentDate);
+                console.log(name, contactNumber, age, aadhar, gender, bloodGroup, currentDate, expiryDate);
                 JsBarcode("#barcode-value", data);
 
                 const entry = {
@@ -44,17 +46,24 @@
                     age: age,
                     aadhar: aadhar,
                     gender: gender,
-                    bloodGroup: bloodGroup,
-                    dor: currentDate.toDateString()
+                    bloodGroup: bloodGroup.toLowerCase(),
+                    dor: currentDate.toDateString(),
+                    expiryDate: expiryDate.toDateString()
                 };
                 pushToDb(entry);
             }
 
             function pushToDb(entry) {
-                database.ref("blood-bank/"+entry.aadhar).set(entry).then(()=>{
-                    alert("Datbase has been updated");
-                }).catch(err=>{
-                    console.log(err);
+                var userRef = database.ref("blood-bank/"+entry.aadhar);
+                userRef.once("value", snapshot=>{
+                    if(snapshot.exists()) alert("You've reached the blood donation limit for today.");
+                    else {
+                        userRef.set(entry).then(()=>{
+                            alert("Datbase has been updated");
+                        }).catch(err=>{
+                            console.log(err);
+                        });
+                    }
                 });
             }
 

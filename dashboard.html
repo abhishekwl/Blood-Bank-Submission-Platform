@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Barcode Scanner</title>
+        <meta charset="utf-8"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" />
+        <link href="./style.css" rel="stylesheet" />
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>
+
+        <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
+        <script>
+            var config = {
+                apiKey: "AIzaSyBcNqrPKB9T9-2VKRFsLUtsytj4O09xqWA",
+                authDomain: "musicx-46c2d.firebaseapp.com",
+                databaseURL: "https://musicx-46c2d.firebaseio.com",
+                projectId: "musicx-46c2d",
+                storageBucket: "musicx-46c2d.appspot.com",
+                messagingSenderId: "629755735207"
+            };
+            firebase.initializeApp(config);
+            var database = firebase.database();
+
+            database.ref("blood-count/a+").on("value", snapshot=>{
+                document.getElementById("a+").innerHTML = snapshot.val();
+            });
+
+            database.ref("blood-count/b+").on("value", snapshot=>{
+                document.getElementById("b+").innerHTML = snapshot.val();  
+            }); 
+            
+            database.ref("blood-count/ab+").on("value", snapshot=>{
+                document.getElementById("ab+").innerHTML = snapshot.val();
+            });
+
+            database.ref("blood-count/o+").on("value", snapshot=>{
+                document.getElementById("o+").innerHTML = snapshot.val();
+            });
+
+            database.ref("blood-count/a-").on("value", snapshot=>{
+                document.getElementById("a-").innerHTML = snapshot.val();
+            });
+
+            database.ref("blood-count/b-").on("value", snapshot=>{
+                document.getElementById("b-").innerHTML = snapshot.val();
+            });
+
+            database.ref("blood-count/ab-").on("value", snapshot=>{
+                document.getElementById("ab-").innerHTML = snapshot.val();
+            });
+            
+            database.ref("blood-count/o-").on("value", snapshot=>{
+                document.getElementById("o-").innerHTML = snapshot.val();
+            });
+
+
+
+        </script>
+        </head>
+    <body>
+        <div class="jumbotron">
+            <h1 id="page-header-title">Donate Blood<br />Save Lives.</h1>
+        </div>
+        <div class="container">
+            <h1 id="content-header">Dashboard</h1>
+            <div class="row">
+                <div class="col-sm-3">A +ve</div>
+                <div class="col-sm-3">B +ve</div>
+                <div class="col-sm-3">AB +ve</div>
+                <div class="col-sm-3">O +ve</div>
+            </div>
+
+            <div class="row">
+                <span class="col-sm-3" id="a+">0</span>
+                <span class="col-sm-3" id="b+">0</span>
+                <span class="col-sm-3" id="ab+">0</span>
+                <span class="col-sm-3" id="o+">0</span>
+            </div>
+
+            <br /></br />
+            <div class="row">
+                <div class="col-sm-3">A -ve</div>
+                <div class="col-sm-3">B -ve</div>
+                <div class="col-sm-3">AB -ve</div>
+                <div class="col-sm-3">O -ve</div>
+            </div>
+
+            <div class="row">
+                <span class="col-sm-3" id="a-">0</span>
+                <span class="col-sm-3" id="b-">0</span>
+                <span class="col-sm-3" id="ab-">0</span>
+                <span class="col-sm-3" id="o-">0</span>
+            </div>
+        </div>
+    </body>
+</html>
