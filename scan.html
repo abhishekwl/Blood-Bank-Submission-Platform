@@ -40,6 +40,36 @@
                 var dataArr = dataFromBarcode.split(";");
                 var aadahrNumber = dataArr[2];
 
+                var userRef = database.ref("blood-bank/"+aadahrNumber);
+                userRef.once("value", snapshotPre=>{
+                    const user = snapshotPre.val();
+                    const userBloodGroup = user.bloodGroup;
+                    var countRef = database.ref("blood-count/"+userBloodGroup);
+
+                    countRef.once("value", snapshot=>{
+                        var currentBloodGroupCount = snapshot.val();
+                        if(snapshotPre.exists() && snapshotPre.val().submitted===true) {
+                            countRef.set(currentBloodGroupCount-1).then(()=>{
+                                alert("Entry already exists, decrementing count.");
+                            }).catch(err=>{ 
+                                console.log(err.message);
+                            });
+                        } else {
+                            countRef.set(currentBloodGroupCount+1).then(()=>{
+                                userRef.child("submitted").set(true).then(()=>{
+                                    console.log("Database has been updated");
+                                }).catch(err=>{
+                                    console.log(err.message);
+                                });
+                            }).catch(err=>{ 
+                                console.log(err.message);
+                            });
+                        }
+                    }); 
+
+                });
+                
+                /*
                 database.ref("blood-bank/"+aadahrNumber).once("value", snapshot=>{
                     const user = snapshot.val();
                     const userBloodGroup = user.bloodGroup;
@@ -54,6 +84,7 @@
                         });
                     });             
                 });
+                */
 
                 console.log(aadahrNumber);
                 
